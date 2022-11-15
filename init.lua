@@ -223,6 +223,7 @@ local config = {
             -- ["<leader>dr"] = { "<cmd>lua require'dap'.run_last()<cr>", desc = "Debug: Run" },
             ["<leader>drd"] = { "<cmd>lua require'dap'.run(DjangoConf)<cr>", desc = "Debug: Run Django conf" },
             ["<leader>drf"] = { "<cmd>lua require'dap'.run(LaunchFileConf)<cr>", desc = "Debug: Run file conf" },
+            ["<leader>drl"] = { "<cmd>lua require'dap'.run_last()<cr>", desc = "Debug: Run last session" },
 
             ["<leader>dc"] = { "<cmd>lua require'dap'.continue()<cr>", desc = "Debug: Continue" },
 
