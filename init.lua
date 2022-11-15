@@ -220,13 +220,20 @@ local config = {
 
             -- debugging
             ["<leader>d"] = false,
-            ["<leader>dr"] = { "<cmd>lua require'dap'.run_last()<cr>", desc = "Debug: Run" },
+            -- ["<leader>dr"] = { "<cmd>lua require'dap'.run_last()<cr>", desc = "Debug: Run" },
+            ["<leader>drd"] = { "<cmd>lua require'dap'.run(DjangoConf)<cr>", desc = "Debug: Run Django conf" },
+            ["<leader>drf"] = { "<cmd>lua require'dap'.run(LaunchFileConf)<cr>", desc = "Debug: Run file conf" },
+
             ["<leader>dc"] = { "<cmd>lua require'dap'.continue()<cr>", desc = "Debug: Continue" },
+
             ["<leader>dt"] = { "<cmd>lua require'dap'.terminate()<cr>", desc = "Debug: Terminate" },
+
             ["<leader>dso"] = { "<cmd>lua require'dap'.step_out()<cr>", desc = "Debug: Step Out" },
             ["<leader>dsi"] = { "<cmd>lua require'dap'.step_into()<cr>", desc = "Debug: Step Into" },
-            ["<leader>do"] = { "<cmd>lua require'dap'.repl.open()<cr>", desc = "Debug: Open debug terminal" },
-            ["<leader>dr"] = { "<cmd>lua require'dap'.repl.close()<cr>", desc = "Debug: Close debug terminal" },
+
+            ["<leader>dro"] = { "<cmd>lua require'dap'.repl.open()<cr>", desc = "Debug: Open debug terminal" },
+            ["<leader>drc"] = { "<cmd>lua require'dap'.repl.close()<cr>", desc = "Debug: Close debug terminal" },
+
             ["<leader>tb"] = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>",
                 desc = "Debug: Toggle Breakpoint" },
 
@@ -248,7 +255,7 @@ local config = {
             -- "nvim-tree/nvim-tree.lua",
             "Koihik/LuaFormatter",
             "j-hui/fidget.nvim",
-            "mfussenegger/nvim-dap-python",
+            "mfussenegger/nvim-dap",
 
             -- You can also add new plugins here as well:
             -- Add plugins, the packer syntax without the "use"
@@ -336,7 +343,11 @@ local config = {
                     -- third key is the key to bring up next level and its displayed
                     -- group name in which-key top level menu
                     ["b"] = { name = "Buffer" },
-                    ["d"] = { ["s"] = { name = "Step ..." }, name = "Debug options" },
+                    ["d"] = { 
+                            ["s"] = { name = "+Step" },  
+                            ["r"] = { name = "+Run" },  
+                            name = "Debug options" 
+                    },
                 },
             },
         },
@@ -361,47 +372,15 @@ local config = {
     end,
 }
 
-local dap = require('dap')
-dap.adapters.python = {
-    type = 'executable';
-    command = os.getenv("VIRTUAL_ENV") .. "/bin/python"; -- before start nvim must be in need environment
-    args = { '-m', 'debugpy.adapter' };
-    name = 'test'
-}
-dap.configurations.python = {
-    -- {
-    --     -- The first three options are required by nvim-dap
-    --     type = 'python'; -- the type here established the link to the adapter definition: `dap.adapters.python`
-    --     request = 'launch';
-    --     name = "Launch file";
-    --
-    --     -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
-    --
-    --     program = "${file}"; -- This configuration will launch the current file if used.
-    --     pythonPath = function()
-    --         -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
-    --         -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
-    --         -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
-    --         local cwd = vim.fn.getcwd()
-    --         if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
-    --             return cwd .. '/venv/bin/python'
-    --         elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
-    --             return cwd .. '/.venv/bin/python'
-    --         else
-    --             return '/usr/bin/python'
-    --         end
-    --     end;
-    -- },
-    {
-         -- The first three options are required by nvim-dap
+LaunchFileConf = {
+        -- The first three options are required by nvim-dap
         type = 'python'; -- the type here established the link to the adapter definition: `dap.adapters.python`
         request = 'launch';
-        name = "Django";
+        name = "Launch file";
 
         -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
-        program = "manage.py"; -- This configuration will launch the current file if used.
-        args = {'runserver'},
-        -- program = "${file}"; -- This configuration will launch the current file if used.
+
+        program = "${file}"; -- This configuration will launch the current file if used.
         pythonPath = function()
             -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
             -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
@@ -415,8 +394,26 @@ dap.configurations.python = {
                 return '/usr/bin/python'
             end
         end;
-
-    }
 }
+
+DjangoConf = {
+  type = 'python',
+  request = 'launch',
+  name = 'Django',
+  program = vim.fn.getcwd() .. '/manage.py',  -- NOTE: Adapt path to manage.py as needed
+  args = {'runserver', '--noreload'},
+}
+
+local dap = require('dap')
+dap.adapters.python = {
+    type = 'executable';
+    command = os.getenv("VIRTUAL_ENV") .. "/bin/python"; -- before start nvim must be in need environment
+    args = { '-m', 'debugpy.adapter' };
+}
+
+dap.configurations.python = {
+        LaunchFileConf,
+}
+table.insert(dap.configurations.python, DjangoConf)
 
 return config
