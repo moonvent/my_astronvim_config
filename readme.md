@@ -14,7 +14,7 @@ All next commands input in command line vim (throught :)
 1. <pre>LspInstall pyright</pre>
 2. <pre>TSInstall python</pre>
 3. For install new packages you MUST write this packages in <pre>plugins</pre> section, and RESTART nvim, and after that write <pre>PackerInstall</pre>
-4. For update AstroNVIM (if you need it ;) ) <pre>AstroUpdate</pre>
+4. For update AstroNVIM (if you need it 😁 ) <pre>AstroUpdate</pre>
 
 Okay, we install dependencies for developing on python, next dependencies for comfortable developing and coding:
 
@@ -25,3 +25,10 @@ Okay, we install dependencies for developing on python, next dependencies for co
 5. If in prev point you are get error, comment section after <pre>Debug</pre> and repeat it, after that uncomment this section for debugger)
 
 
+#### What can do this config?
+
+- [x] Analyze Python code (for dev);
+- [x] Analyze Lua code (for dev nvim 😁);
+- [x] Debug Python code;
+- [x] Send files with protocol sftp;
+- [ ] Comfortable commit tool and with it load on server new changes;
