@@ -372,6 +372,16 @@ local config = {
     end,
 }
 
+
+--------------------------------------------------
+--
+--
+--      Setup the debugger
+--
+--
+--------------------------------------------------
+
+-- For sing file
 LaunchFileConf = {
         -- The first three options are required by nvim-dap
         type = 'python'; -- the type here established the link to the adapter definition: `dap.adapters.python`
@@ -396,6 +406,8 @@ LaunchFileConf = {
         end;
 }
 
+
+-- For django
 DjangoConf = {
   type = 'python',
   request = 'launch',
@@ -404,10 +416,12 @@ DjangoConf = {
   args = {'runserver', '--noreload'},
 }
 
+
 local dap = require('dap')
 dap.adapters.python = {
     type = 'executable';
-    command = os.getenv("VIRTUAL_ENV") .. "/bin/python"; -- before start nvim must be in need environment
+    -- command = os.getenv("VIRTUAL_ENV") .. "/bin/python"; -- before start nvim must be in need environment
+    command = vim.fn.getcwd() .. "/venv/bin/python"; -- before start nvim must be in need environment
     args = { '-m', 'debugpy.adapter' };
 }
 
