@@ -25,6 +25,30 @@ Okay, we install dependencies for developing on python, next dependencies for co
 5. If in prev point you are get error, comment section after <pre>Debug</pre> and repeat it, after that uncomment this section for debugger)
 
 
+#### Project Setup for start working
+
+1. **For Python debug work**  Create in root project directory file <pre>pyrightconfig.json</pre> with this data: <pre>
+{
+  "venv": "venv",
+  "venvPath": "."
+}
+</pre><br>
+Also, you need install debugpy <pre>pip install debugpy</pre>
+2. **For SFTP Work**  Create in root project directory file <pre>
+host   localhost
+user   user
+pass   password
+port   22
+remote /root/
+confirm_download 0
+confirm_upload 0
+</pre>
+- For upload use command <pre>:Hupload</pre> or <pre>leader - hsu</pre><br>
+- For download use command <pre>:Hdownload</pre> or <pre>leader - hsd</pre>
+- For upload all dir use command <pre>:Hupdir</pre> or <pre>leader - hsf</pre>
+More details: https://github.com/hesselbom/vim-hsftp
+
+
 #### What can do this config?
 
 - [x] Analyze Python code (for dev);
