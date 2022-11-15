@@ -34,7 +34,7 @@ Okay, we install dependencies for developing on python, next dependencies for co
 }
 </pre><br>
 Also, you need install debugpy <pre>pip install debugpy</pre>
-2. **For SFTP Work**  Create in root project directory file <pre>
+2. **For SFTP Work**  Create in root project directory file <pre>.hsftp</pre> <pre>
 host   localhost
 user   user
 pass   password
