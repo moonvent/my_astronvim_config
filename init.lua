@@ -210,10 +210,10 @@ local config = {
         n = {
             -- second key is the lefthand side of the map
             -- mappings seen under group name "Buffer"
-            ["<leader>bb"] = { "<cmd>tabnew<cr>", desc = "New tab" },
-            ["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Pick to close" },
-            ["<leader>bj"] = { "<cmd>BufferLinePick<cr>", desc = "Pick to jump" },
-            ["<leader>bt"] = { "<cmd>BufferLineSortByTabs<cr>", desc = "Sort by tabs" },
+            -- ["<leader>bb"] = { "<cmd>tabnew<cr>", desc = "New tab" },
+            -- ["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Pick to close" },
+            -- ["<leader>bj"] = { "<cmd>BufferLinePick<cr>", desc = "Pick to jump" },
+            -- ["<leader>bt"] = { "<cmd>BufferLineSortByTabs<cr>", desc = "Sort by tabs" },
 
             -- clear highlight for founded results
             [",<space>"] = { "<cmd>nohlsearch<cr>", desc = "Clear Founded" },
@@ -237,6 +237,9 @@ local config = {
 
             ["<leader>tb"] = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>",
                 desc = "Debug: Toggle Breakpoint" },
+            
+            -- terminal 
+            -- ["<leader>tt"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle terminal"},
 
 
             -- quick save
@@ -254,9 +257,9 @@ local config = {
             -- You can disable default plugins as follows:
             -- ["goolord/alpha-nvim"] = { disable = true },
             -- "nvim-tree/nvim-tree.lua",
-            "Koihik/LuaFormatter",
-            "j-hui/fidget.nvim",
-            "mfussenegger/nvim-dap",
+            "Koihik/LuaFormatter",              -- for better work with configs
+            "mfussenegger/nvim-dap",            -- debugger plugin
+            "hesselbom/vim-hsftp",              -- sftp plugin
 
             -- You can also add new plugins here as well:
             -- Add plugins, the packer syntax without the "use"
