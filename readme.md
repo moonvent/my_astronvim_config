@@ -33,7 +33,14 @@ Okay, we install dependencies for developing on python, next dependencies for co
   "venvPath": "."
 }
 </pre><br>
-Also, you need install debugpy <pre>pip install debugpy</pre>
+Also, you need install debugpy <pre>pip install debugpy</pre> and a few packages for correct work:
+For correct work autocompletes
+<pre>pip install jedi</pre>
+For correct work with nvim (a few features needed for nvim)
+<pre>pip install pynvim</pre>
+For correct work sftp
+<pre>pip install pysftp</pre>
+
 2. **For SFTP Work**  Create in root project directory file <pre>.hsftp</pre> <pre>
 host   localhost
 user   user

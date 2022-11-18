@@ -9,6 +9,8 @@ vim.g.loaded_netrwPlugin = 1
 -- set termguicolors to enable highlight groups
 vim.opt.termguicolors = true
 
+-- vim.g.deoplete#sources#jedi#show_docstring = 1
+
 
 -- You can think of a Lua "table" as a dictionary like data structure the
 -- normal format is "key = value". These also handle array like data structures
@@ -244,6 +246,7 @@ local config = {
 
             -- quick save
             ["<C-s>"] = { ":w!<cr>", desc = "Save File" }, -- change description but the same command
+            ["<leader>ss"] = { ":w!<cr>", desc = "Save File" },
         },
         t = {
             -- setting a mapping to false will disable it
@@ -260,9 +263,20 @@ local config = {
             "Koihik/LuaFormatter",              -- for better work with configs
             "mfussenegger/nvim-dap",            -- debugger plugin
             "hesselbom/vim-hsftp",              -- sftp plugin
+            "lepture/vim-jinja",
+            "Shougo/deoplete.nvim",
+            "deoplete-plugins/deoplete-jedi",
+{
+  "mattn/emmet-vim",
+  setup = function () -- load stuff before the plugin is loaded
+    vim.g.user_emmet_leader_key = '<c-m>'
 
-            -- You can also add new plugins here as well:
-            -- Add plugins, the packer syntax without the "use"
+    vim.g.user_emmet_settings = {
+      indent_blockelement = 1,
+    }
+  end
+},
+            -- You can also add new plugins here as well: Add plugins, the packer syntax without the "use"
             -- { "andweeb/presence.nvim" },
             -- {
             --   "ray-x/lsp_signature.nvim",
@@ -434,4 +448,24 @@ dap.configurations.python = {
 }
 table.insert(dap.configurations.python, DjangoConf)
 
+--------------------------------------------------
+--
+--
+--      Setup the emmet
+--
+--
+--------------------------------------------------
+
+vim.g.user_emmet_install_global = 0             -- off for all files
+vim.g.user_emmet_expandabbr_key = '<tab><tab>'
+
+vim.api.nvim_create_autocmd("FileType", {
+        pattern = { 'html', 'css' },            -- make available in css and html
+        command = "EmmetInstall"
+})
+
+
 return config
+-- EOF
+
+
