@@ -239,11 +239,9 @@ local config = {
 
             ["<leader>tb"] = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>",
                 desc = "Debug: Toggle Breakpoint" },
+
+
             
-            -- terminal 
-            -- ["<leader>tt"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle terminal"},
-
-
             -- quick save
             ["<C-s>"] = { ":w!<cr>", desc = "Save File" }, -- change description but the same command
             ["<leader>ss"] = { ":w!<cr>", desc = "Save File" },
@@ -260,22 +258,17 @@ local config = {
             -- You can disable default plugins as follows:
             -- ["goolord/alpha-nvim"] = { disable = true },
             -- "nvim-tree/nvim-tree.lua",
-            "Koihik/LuaFormatter",              -- for better work with configs
-            "mfussenegger/nvim-dap",            -- debugger plugin
-            "hesselbom/vim-hsftp",              -- sftp plugin
-            "lepture/vim-jinja",
-            "Shougo/deoplete.nvim",
-            "deoplete-plugins/deoplete-jedi",
-{
-  "mattn/emmet-vim",
-  setup = function () -- load stuff before the plugin is loaded
-    vim.g.user_emmet_leader_key = '<c-m>'
+                "Koihik/LuaFormatter",              -- for better work with configs
+                "mfussenegger/nvim-dap",            -- debugger plugin
+                "hesselbom/vim-hsftp",              -- sftp plugin
+                "Shougo/deoplete.nvim",             -- good autocomplete 
+                "deoplete-plugins/deoplete-jedi",   -- good autocomplete for python
+                "glench/vim-jinja2-syntax",         -- for django jinja2 
+                "mattn/emmet-vim",                  -- for html and css work
 
-    vim.g.user_emmet_settings = {
-      indent_blockelement = 1,
-    }
-  end
-},
+
+
+
             -- You can also add new plugins here as well: Add plugins, the packer syntax without the "use"
             -- { "andweeb/presence.nvim" },
             -- {
@@ -456,16 +449,19 @@ table.insert(dap.configurations.python, DjangoConf)
 --
 --------------------------------------------------
 
-vim.g.user_emmet_install_global = 0             -- off for all files
-vim.g.user_emmet_expandabbr_key = '<tab><tab>'
+vim.g.user_emmet_install_global = 0                     -- off for all files
+vim.g.user_emmet_expandabbr_key = '<C-,>'               -- emmet action of expand on ctrl + ,
+vim.g.user_emmet_balancetaginward_key = '<C-y>d'        -- all tag from inner text (required cursor on letter)
+vim.g.user_emmet_balancetagoutward_key = '<C-y>D'       -- all inner tag from outer tag
 
 vim.api.nvim_create_autocmd("FileType", {
-        pattern = { 'html', 'css' },            -- make available in css and html
+        pattern = { 'html', 'css', 'htmldjango', 'jinja', 'jinja.html'},            -- make available in css and html and jinja html
         command = "EmmetInstall"
 })
 
 
 return config
 -- EOF
+-- after this line must be NOTHING
 
 
