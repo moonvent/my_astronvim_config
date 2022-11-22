@@ -237,11 +237,10 @@ local config = {
             ["<leader>dro"] = { "<cmd>lua require'dap'.repl.open()<cr>", desc = "Debug: Open debug terminal" },
             ["<leader>drc"] = { "<cmd>lua require'dap'.repl.close()<cr>", desc = "Debug: Close debug terminal" },
 
-            ["<leader>tb"] = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>",
+            ["<leader>dbc"] = { "<cmd>lua require'dap'.clear_breakpoints()<cr>", desc = "Debug: Clear all breakpoints" },
+            ["<leader>dbt"] = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>",
                 desc = "Debug: Toggle Breakpoint" },
 
-
-            
             -- quick save
             ["<C-s>"] = { ":w!<cr>", desc = "Save File" }, -- change description but the same command
             ["<leader>ss"] = { ":w!<cr>", desc = "Save File" },
@@ -263,11 +262,13 @@ local config = {
                 "hesselbom/vim-hsftp",              -- sftp plugin
                 "Shougo/deoplete.nvim",             -- good autocomplete 
                 "deoplete-plugins/deoplete-jedi",   -- good autocomplete for python
-                "glench/vim-jinja2-syntax",         -- for django jinja2 
                 "mattn/emmet-vim",                  -- for html and css work
-
-
-
+                {'quick-lint/quick-lint-js', rtp = 'plugin/vim/quick-lint-js.vim', tag = '2.10.0', opt = true},
+                "carlitux/deoplete-ternjs",
+                {"ternjs/tern_for_vim", run = 'cd ~/.local/share/nvim/plugged/tern_for_vim && npm install'},
+                "mitsuhiko/vim-jinja",
+                "pangloss/vim-javascript",
+                -- "wokalski/autocomplete-flow",
 
             -- You can also add new plugins here as well: Add plugins, the packer syntax without the "use"
             -- { "andweeb/presence.nvim" },
@@ -357,6 +358,7 @@ local config = {
                     ["d"] = { 
                             ["s"] = { name = "+Step" },  
                             ["r"] = { name = "+Run" },  
+                            ["b"] = { name = "+Breakpoints" },  
                             name = "Debug options" 
                     },
                 },
@@ -458,6 +460,21 @@ vim.api.nvim_create_autocmd("FileType", {
         pattern = { 'html', 'css', 'htmldjango', 'jinja', 'jinja.html'},            -- make available in css and html and jinja html
         command = "EmmetInstall"
 })
+
+--------------------------------------------------
+--
+--
+--      Setup js completes
+--
+--
+--------------------------------------------------
+
+require('lspconfig/quick_lint_js').setup {}
+
+
+-- vim.g.LanguageClient_serverCommands = {
+--         javascript = {'/usr/local/bin/javascript-typescript-stdio',}
+-- }
 
 
 return config
