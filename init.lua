@@ -9,8 +9,10 @@ vim.g.loaded_netrwPlugin = 1
 -- set termguicolors to enable highlight groups
 vim.opt.termguicolors = true
 
--- vim.g.deoplete#sources#jedi#show_docstring = 1
 
+local g = vim.g
+local o = vim.o
+local opt = vim.opt
 
 -- You can think of a Lua "table" as a dictionary like data structure the
 -- normal format is "key = value". These also handle array like data structures
@@ -220,6 +222,9 @@ local config = {
             -- clear highlight for founded results
             [",<space>"] = { "<cmd>nohlsearch<cr>", desc = "Clear Founded" },
 
+            -- commend on ctrl + /
+            ["<C-/>"] = { "<cmd>lua require('Comment.api').toggle.linewise.current()<cr>", desc = "Comment Line" },
+
             -- debugging
             ["<leader>d"] = false,
             -- ["<leader>dr"] = { "<cmd>lua require'dap'.run_last()<cr>", desc = "Debug: Run" },
@@ -236,6 +241,7 @@ local config = {
 
             ["<leader>dro"] = { "<cmd>lua require'dap'.repl.open()<cr>", desc = "Debug: Open debug terminal" },
             ["<leader>drc"] = { "<cmd>lua require'dap'.repl.close()<cr>", desc = "Debug: Close debug terminal" },
+            ["<leader>drt"] = { "<cmd>lua require'dap'.repl.toggle()<cr>", desc = "Debug: Toggle debug terminal" },
 
             ["<leader>dbc"] = { "<cmd>lua require'dap'.clear_breakpoints()<cr>", desc = "Debug: Clear all breakpoints" },
             ["<leader>dbt"] = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>",
@@ -263,12 +269,6 @@ local config = {
                 "Shougo/deoplete.nvim",             -- good autocomplete 
                 "deoplete-plugins/deoplete-jedi",   -- good autocomplete for python
                 "mattn/emmet-vim",                  -- for html and css work
-                {'quick-lint/quick-lint-js', rtp = 'plugin/vim/quick-lint-js.vim', tag = '2.10.0', opt = true},
-                "carlitux/deoplete-ternjs",
-                {"ternjs/tern_for_vim", run = 'cd ~/.local/share/nvim/plugged/tern_for_vim && npm install'},
-                "mitsuhiko/vim-jinja",
-                "pangloss/vim-javascript",
-                -- "wokalski/autocomplete-flow",
 
             -- You can also add new plugins here as well: Add plugins, the packer syntax without the "use"
             -- { "andweeb/presence.nvim" },
@@ -460,22 +460,6 @@ vim.api.nvim_create_autocmd("FileType", {
         pattern = { 'html', 'css', 'htmldjango', 'jinja', 'jinja.html'},            -- make available in css and html and jinja html
         command = "EmmetInstall"
 })
-
---------------------------------------------------
---
---
---      Setup js completes
---
---
---------------------------------------------------
-
-require('lspconfig/quick_lint_js').setup {}
-
-
--- vim.g.LanguageClient_serverCommands = {
---         javascript = {'/usr/local/bin/javascript-typescript-stdio',}
--- }
-
 
 return config
 -- EOF

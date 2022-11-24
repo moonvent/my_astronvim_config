@@ -12,7 +12,9 @@ Okay, AstroNVIM installed, next it install our dependencies and packages;
 All next commands input in command line vim (throught :)
 
 1. <pre>LspInstall pyright</pre>
+1. <pre>LspInstall tsserver</pre>
 2. <pre>TSInstall python</pre>
+2. <pre>TSInstall javascript</pre>
 3. For install new packages you MUST write this packages in <pre>plugins</pre> section, and RESTART nvim, and after that write <pre>PackerInstall</pre>
 4. For update AstroNVIM (if you need it 😁 ) <pre>AstroUpdate</pre>
 
