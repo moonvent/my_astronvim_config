@@ -230,6 +230,7 @@ local config = {
             -- ["<leader>dr"] = { "<cmd>lua require'dap'.run_last()<cr>", desc = "Debug: Run" },
             ["<leader>drd"] = { "<cmd>lua require'dap'.run(DjangoConf)<cr>", desc = "Debug: Run Django conf" },
             ["<leader>drf"] = { "<cmd>lua require'dap'.run(LaunchFileConf)<cr>", desc = "Debug: Run file conf" },
+            ["<leader>dra"] = { "<cmd>lua require'dap'.run(LaunchAppConf)<cr>", desc = "Debug: Run main file from poetry" },
             ["<leader>drl"] = { "<cmd>lua require'dap'.run_last()<cr>", desc = "Debug: Run last session" },
 
             ["<leader>dc"] = { "<cmd>lua require'dap'.continue()<cr>", desc = "Debug: Continue" },
@@ -239,9 +240,9 @@ local config = {
             ["<leader>dso"] = { "<cmd>lua require'dap'.step_out()<cr>", desc = "Debug: Step Out" },
             ["<leader>dsi"] = { "<cmd>lua require'dap'.step_into()<cr>", desc = "Debug: Step Into" },
 
-            ["<leader>dro"] = { "<cmd>lua require'dap'.repl.open()<cr>", desc = "Debug: Open debug terminal" },
-            ["<leader>drc"] = { "<cmd>lua require'dap'.repl.close()<cr>", desc = "Debug: Close debug terminal" },
-            ["<leader>drt"] = { "<cmd>lua require'dap'.repl.toggle()<cr>", desc = "Debug: Toggle debug terminal" },
+            ["<leader>dro"] = { "<cmd>lua require('dapui').open()<cr>", desc = "Debug: Open debug terminal" },
+            ["<leader>drc"] = { "<cmd>lua require('dapui').close()<cr>", desc = "Debug: Close debug terminal" },
+            ["<leader>drt"] = { "<cmd>lua require('dapui').toggle()<cr>", desc = "Debug: Toggle debug terminal" },
 
             ["<leader>dbc"] = { "<cmd>lua require'dap'.clear_breakpoints()<cr>", desc = "Debug: Clear all breakpoints" },
             ["<leader>dbt"] = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>",
@@ -269,6 +270,7 @@ local config = {
                 "Shougo/deoplete.nvim",             -- good autocomplete 
                 "deoplete-plugins/deoplete-jedi",   -- good autocomplete for python
                 "mattn/emmet-vim",                  -- for html and css work
+                "rcarriga/nvim-dap-ui",
 
             -- You can also add new plugins here as well: Add plugins, the packer syntax without the "use"
             -- { "andweeb/presence.nvim" },
@@ -394,6 +396,10 @@ local config = {
 --
 --------------------------------------------------
 
+
+vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl=''})
+path_to_python_from_venv = "/venv/bin/python"
+
 -- For sing file
 LaunchFileConf = {
         -- The first three options are required by nvim-dap
@@ -409,10 +415,30 @@ LaunchFileConf = {
             -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
             -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
             local cwd = vim.fn.getcwd()
-            if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
-                return cwd .. '/venv/bin/python'
-            elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
-                return cwd .. '/.venv/bin/python'
+            if vim.fn.executable(cwd .. path_to_python_from_venv) == 1 then
+                return cwd .. path_to_python_from_venv
+            else
+                return '/usr/bin/python'
+            end
+        end;
+}
+
+LaunchAppConf = {
+        -- The first three options are required by nvim-dap
+        type = 'python'; -- the type here established the link to the adapter definition: `dap.adapters.python`
+        request = 'launch';
+        name = "Launch app";
+
+        -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+
+        program = "main.py"; -- This configuration will launch the current file if used.
+        pythonPath = function()
+            -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
+            -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
+            -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
+            local cwd = vim.fn.getcwd()
+            if vim.fn.executable(cwd .. path_to_python_from_venv) == 1 then
+                return cwd .. path_to_python_from_venv
             else
                 return '/usr/bin/python'
             end
@@ -437,11 +463,13 @@ dap.adapters.python = {
     command = vim.fn.getcwd() .. "/venv/bin/python"; -- before start nvim must be in need environment
     args = { '-m', 'debugpy.adapter' };
 }
+-- dap.defaults.fallback.terminal_win_cmd = '10vsplit new'
 
 dap.configurations.python = {
         LaunchFileConf,
 }
 table.insert(dap.configurations.python, DjangoConf)
+-- table.insert(dap.configurations.python, LaunchAppConf)
 
 --------------------------------------------------
 --
@@ -457,9 +485,65 @@ vim.g.user_emmet_balancetaginward_key = '<C-y>d'        -- all tag from inner te
 vim.g.user_emmet_balancetagoutward_key = '<C-y>D'       -- all inner tag from outer tag
 
 vim.api.nvim_create_autocmd("FileType", {
-        pattern = { 'html', 'css', 'htmldjango', 'jinja', 'jinja.html'},            -- make available in css and html and jinja html
-        command = "EmmetInstall"
+    pattern = { 'html', 'css', 'htmldjango', 'jinja', 'jinja.html'},            -- make available in css and html and jinja html
+    command = "EmmetInstall"
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { 'dap-repl', },           
+    command = "lua require('dap.ext.autocompl').attach()"
+})
+
+--------------------------------------------------
+--
+--
+--      Setup the debug ui
+--
+--
+--------------------------------------------------
+
+
+require("dapui").setup({
+  icons = { expanded = "v", collapsed = ">", current_frame = "" },
+  mappings = {
+    -- Use a table to apply multiple mappings
+    expand = { "<CR>", "<2-LeftMouse>" },
+    open = "o",
+    remove = "d",
+    edit = "e",
+    repl = "r",
+    toggle = "t",
+  },
+  controls = {
+    -- Requires Neovim nightly (or 0.8 when released)
+    enabled = false,
+    -- Display controls in this element
+    },})
+    --
+--------------------------------------------------
+--
+--
+--      Setup the neo-tree
+--
+--
+--------------------------------------------------
+
+
+require("neo-tree").setup({
+     window = {
+       mappings = {
+         ["O"] = "open <cfile>"              -- mapping for open file from neo tree in system
+       }
+     },
+     -- filesystem = {
+     --   window = {
+     --     mappings = {
+     --       ["A"] = "command_b"
+     --     }
+     --   }
+     -- }
+   })
+
 
 return config
 -- EOF
